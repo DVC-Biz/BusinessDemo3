@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,45 +11,65 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
-export default async function Pricing() {
-  const t = await getTranslations("pricing");
+export default function Pricing() {
+  const [isAnnual, setIsAnnual] = useState(true);
+
   const plans = [
     {
-      name: t("plans.0.name"),
-      description: t("plans.0.description"),
-      price: t("plans.0.price"),
-      feature1: t("plans.0.feature1"),
-      feature2: t("plans.0.feature2"),
-      feature3: t("plans.0.feature3"),
-      feature4: t("plans.0.feature4"),
-      cta: t("plans.0.cta"),
+      name: "Essential",
+      description:
+        "For small businesses looking to establish a strategic foundation.",
+      monthlyPrice: "$1,499",
+      annualPrice: "$14,990",
+      features: [
+        "Initial business assessment",
+        "Basic strategic planning",
+        "Monthly consultation (2 hours)",
+        "Quarterly performance review",
+        "Email support",
+      ],
+      cta: "Get Started",
       popular: false,
     },
     {
-      name: t("plans.1.name"),
-      description: t("plans.1.description"),
-      price: t("plans.1.price"),
-      feature1: t("plans.1.feature1"),
-      feature2: t("plans.1.feature2"),
-      feature3: t("plans.1.feature3"),
-      feature4: t("plans.1.feature4"),
-      feature5: t("plans.1.feature5"),
-      cta: t("plans.1.cta"),
+      name: "Professional",
+      description:
+        "For growing businesses seeking comprehensive strategic support.",
+      monthlyPrice: "$2,999",
+      annualPrice: "$29,990",
+      features: [
+        "Comprehensive business assessment",
+        "Advanced strategic planning",
+        "Weekly consultation (4 hours)",
+        "Monthly performance review",
+        "Priority email and phone support",
+        "Market research and analysis",
+        "Competitor benchmarking",
+      ],
+      cta: "Get Started",
       popular: true,
     },
     {
-      name: t("plans.2.name"),
-      description: t("plans.2.description"),
-      price: t("plans.2.price"),
-      feature1: t("plans.2.feature1"),
-      feature2: t("plans.2.feature2"),
-      feature3: t("plans.2.feature3"),
-      feature4: t("plans.2.feature4"),
-      feature5: t("plans.2.feature5"),
-      feature6: t("plans.2.feature6"),
-      cta: t("plans.2.cta"),
+      name: "Enterprise",
+      description:
+        "For established organizations requiring premium strategic partnership.",
+      monthlyPrice: "$5,999",
+      annualPrice: "$59,990",
+      features: [
+        "Enterprise-wide assessment",
+        "Comprehensive strategic planning",
+        "Dedicated strategic advisor",
+        "Unlimited consultation hours",
+        "Weekly performance review",
+        "24/7 priority support",
+        "Custom market research",
+        "Executive team workshops",
+        "Board presentation support",
+      ],
+      cta: "Contact Us",
       popular: false,
     },
   ];
@@ -54,57 +77,92 @@ export default async function Pricing() {
   return (
     <section
       id="pricing"
-      className="w-full py-12 md:py-24 lg:py-32 bg-muted/50"
+      className="w-full py-16 md:py-24 lg:py-32 bg-muted/30 overflow-hidden"
     >
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-              {t("title")}
-            </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              {t("subtitle")}
-            </p>
+        <div className="flex flex-col items-center text-center space-y-4 mb-12">
+          <div className="inline-flex items-center rounded-full border px-4 py-1.5 text-sm">
+            <span className="block h-2 w-2 rounded-full bg-primary"></span>
+            <span className="ml-2 font-medium">Pricing</span>
+          </div>
+          <h2 className="font-serif text-3xl font-medium tracking-tight sm:text-4xl">
+            Transparent pricing for your business needs
+          </h2>
+          <p className="mx-auto max-w-[700px] text-muted-foreground">
+            Choose the plan that's right for your business. All plans include
+            our core strategic services and can be customized to meet your
+            specific requirements.
+          </p>
+
+          <div className="flex items-center space-x-4 mt-6">
+            <span
+              className={`text-sm ${
+                !isAnnual
+                  ? "text-foreground font-medium"
+                  : "text-muted-foreground"
+              }`}
+            >
+              Monthly
+            </span>
+            <Switch
+              checked={isAnnual}
+              onCheckedChange={setIsAnnual}
+              id="billing-toggle"
+            />
+            <div className="flex items-center">
+              <Label
+                htmlFor="billing-toggle"
+                className={`text-sm ${
+                  isAnnual
+                    ? "text-foreground font-medium"
+                    : "text-muted-foreground"
+                }`}
+              >
+                Annual
+              </Label>
+              <span className="ml-2 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                Save 20%
+              </span>
+            </div>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className={`flex flex-col justify-between ${
-                plan.popular
-                  ? "border-primary shadow-lg scale-105"
-                  : "border-2 border-muted"
+              className={`border ${
+                plan.popular ? "border-primary shadow-lg relative" : ""
               }`}
             >
               {plan.popular && (
-                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                  {t("popularLabel")}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+                  Most Popular
                 </div>
               )}
               <CardHeader>
-                <CardTitle>{plan.name}</CardTitle>
+                <CardTitle className="font-serif text-2xl">
+                  {plan.name}
+                </CardTitle>
                 <CardDescription>{plan.description}</CardDescription>
               </CardHeader>
-              <CardContent className="grid gap-4">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-bold">{plan.price}</span>
-                  <span className="text-muted-foreground">
-                    / {t("monthly")}
+              <CardContent className="space-y-6">
+                <div>
+                  <span className="font-serif text-4xl font-medium">
+                    {isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                  </span>
+                  <span className="text-muted-foreground ml-2">
+                    {isAnnual ? "/year" : "/month"}
                   </span>
                 </div>
-                <ul className="grid gap-2">
-                  {Object.keys(plan)
-                    .filter((key) => key.startsWith("feature"))
-                    .map((key, featureIndex) => (
-                      <li
-                        key={featureIndex}
-                        className="flex items-center gap-2"
-                      >
-                        <Check className="h-4 w-4 text-primary" />
-                        <span>{plan[key]}</span>
-                      </li>
-                    ))}
+
+                <ul className="space-y-3">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start gap-3">
+                      <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
                 </ul>
               </CardContent>
               <CardFooter>
