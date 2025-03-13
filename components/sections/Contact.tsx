@@ -14,15 +14,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, Phone } from "lucide-react";
-import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Mail, MapPin, Phone, CheckCircle } from "lucide-react";
 
 export default function Contact() {
-  const t = useTranslations("contact");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
+    company: "",
+    service: "",
     message: "",
   });
 
@@ -35,6 +41,10 @@ export default function Contact() {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, service: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,11 +63,12 @@ export default function Contact() {
       setFormData({
         name: "",
         email: "",
-        subject: "",
+        company: "",
+        service: "",
         message: "",
       });
     } catch (err) {
-      setError(t("errorMessage"));
+      setError("Something went wrong. Please try again.");
       console.error("Error submitting form:", err);
     } finally {
       setIsSubmitting(false);
@@ -65,83 +76,168 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="w-full py-12 md:py-24 lg:py-32">
+    <section
+      id="contact"
+      className="w-full py-16 md:py-24 lg:py-32 bg-muted/30 overflow-hidden"
+    >
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-              {t("title")}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <div className="space-y-6">
+            <div className="inline-flex items-center rounded-full border px-4 py-1.5 text-sm">
+              <span className="block h-2 w-2 rounded-full bg-primary"></span>
+              <span className="ml-2 font-medium">Contact Us</span>
+            </div>
+            <h2 className="font-serif text-3xl font-medium tracking-tight sm:text-4xl">
+              Let's discuss how we can help your business
             </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              {t("subtitle")}
+            <p className="text-muted-foreground">
+              Fill out the form below to get in touch with our team. We'll get
+              back to you within 24 hours to schedule a consultation.
             </p>
+
+            <div className="space-y-6 pt-6">
+              <div className="flex items-start gap-4">
+                <div className="rounded-full bg-primary/10 p-2">
+                  <MapPin className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Visit our office</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    123 Business Avenue, Suite 100
+                    <br />
+                    New York, NY 10001
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="rounded-full bg-primary/10 p-2">
+                  <Mail className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Email us</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    info@prestige.com
+                    <br />
+                    support@prestige.com
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="rounded-full bg-primary/10 p-2">
+                  <Phone className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Call us</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    +1 (555) 123-4567
+                    <br />
+                    Mon-Fri from 9am to 6pm EST
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="mx-auto grid max-w-6xl gap-6 py-12 lg:grid-cols-2">
-          <Card>
+
+          <Card className="border">
             <CardHeader>
-              <CardTitle>{t("formTitle")}</CardTitle>
-              <CardDescription>{t("formSubtitle")}</CardDescription>
+              <CardTitle className="font-serif">Send us a message</CardTitle>
+              <CardDescription>
+                We'll get back to you as soon as possible.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {isSuccess ? (
                 <div className="flex flex-col items-center justify-center space-y-4 py-12">
                   <div className="rounded-full bg-primary/10 p-3">
-                    <Mail className="h-6 w-6 text-primary" />
+                    <CheckCircle className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold">{t("successTitle")}</h3>
+                  <h3 className="text-xl font-medium">Message Sent!</h3>
                   <p className="text-center text-muted-foreground">
-                    {t("successMessage")}
+                    Thank you for reaching out. We'll get back to you shortly.
                   </p>
-                  <Button onClick={() => setIsSuccess(false)}>
-                    {t("sendAnother")}
+                  <Button onClick={() => setIsSuccess(false)} className="mt-4">
+                    Send Another Message
                   </Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="grid gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="name">{t("nameLabel")}</Label>
+                    <Label htmlFor="name">Full Name</Label>
                     <Input
                       id="name"
                       name="name"
-                      placeholder={t("namePlaceholder")}
+                      placeholder="John Smith"
                       value={formData.name}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="email">{t("emailLabel")}</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
-                      placeholder={t("emailPlaceholder")}
+                      placeholder="john@example.com"
                       value={formData.email}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="subject">{t("subjectLabel")}</Label>
+                    <Label htmlFor="company">Company</Label>
                     <Input
-                      id="subject"
-                      name="subject"
-                      placeholder={t("subjectPlaceholder")}
-                      value={formData.subject}
+                      id="company"
+                      name="company"
+                      placeholder="Your company name"
+                      value={formData.company}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="message">{t("messageLabel")}</Label>
+                    <Label htmlFor="service">Service Interested In</Label>
+                    <Select
+                      onValueChange={handleSelectChange}
+                      value={formData.service}
+                    >
+                      <SelectTrigger id="service">
+                        <SelectValue placeholder="Select a service" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="strategic-planning">
+                          Strategic Planning
+                        </SelectItem>
+                        <SelectItem value="financial-analysis">
+                          Financial Analysis
+                        </SelectItem>
+                        <SelectItem value="organizational-development">
+                          Organizational Development
+                        </SelectItem>
+                        <SelectItem value="business-consulting">
+                          Business Consulting
+                        </SelectItem>
+                        <SelectItem value="market-research">
+                          Market Research
+                        </SelectItem>
+                        <SelectItem value="performance-optimization">
+                          Performance Optimization
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="message">Message</Label>
                     <Textarea
                       id="message"
                       name="message"
-                      placeholder={t("messagePlaceholder")}
+                      placeholder="Tell us about your business needs..."
                       value={formData.message}
                       onChange={handleChange}
                       required
+                      className="min-h-[120px]"
                     />
                   </div>
                   {error && (
@@ -149,54 +245,15 @@ export default function Contact() {
                       {error}
                     </div>
                   )}
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? t("submitting") : t("submit")}
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="mt-2"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("contactInfoTitle")}</CardTitle>
-              <CardDescription>{t("contactInfoSubtitle")}</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <div className="flex items-start gap-4">
-                <MapPin className="h-6 w-6 text-primary" />
-                <div>
-                  <h3 className="font-semibold">{t("addressTitle")}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    123 Business Street
-                    <br />
-                    Suite 100
-                    <br />
-                    New York, NY 10001
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <Mail className="h-6 w-6 text-primary" />
-                <div>
-                  <h3 className="font-semibold">{t("emailTitle")}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    info@businesspro.com
-                    <br />
-                    support@businesspro.com
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <Phone className="h-6 w-6 text-primary" />
-                <div>
-                  <h3 className="font-semibold">{t("phoneTitle")}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    +1 (555) 123-4567
-                    <br />
-                    +1 (555) 987-6543
-                  </p>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </div>
