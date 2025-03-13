@@ -5,51 +5,92 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BarChart3, Layers, Zap } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  BarChart3,
+  Briefcase,
+  LineChart,
+  PieChart,
+  Target,
+  Users,
+} from "lucide-react";
 
-export default async function Services() {
-  const t = await getTranslations("services");
+export default function Services() {
   const services = [
     {
-      icon: <Zap className="h-10 w-10 text-primary" />,
-      title: t("items.0.title"),
-      description: t("items.0.description"),
+      icon: <Target className="h-10 w-10 text-primary" />,
+      title: "Strategic Planning",
+      description:
+        "Develop comprehensive business strategies aligned with your goals and market opportunities.",
     },
     {
-      icon: <Layers className="h-10 w-10 text-primary" />,
-      title: t("items.1.title"),
-      description: t("items.1.description"),
+      icon: <LineChart className="h-10 w-10 text-primary" />,
+      title: "Financial Analysis",
+      description:
+        "Gain insights into your financial performance and identify opportunities for improvement.",
+    },
+    {
+      icon: <Users className="h-10 w-10 text-primary" />,
+      title: "Organizational Development",
+      description:
+        "Build high-performing teams and optimize your organizational structure.",
+    },
+    {
+      icon: <Briefcase className="h-10 w-10 text-primary" />,
+      title: "Business Consulting",
+      description:
+        "Expert guidance to solve complex business challenges and drive sustainable growth.",
+    },
+    {
+      icon: <PieChart className="h-10 w-10 text-primary" />,
+      title: "Market Research",
+      description:
+        "Comprehensive analysis of market trends, competitors, and customer preferences.",
     },
     {
       icon: <BarChart3 className="h-10 w-10 text-primary" />,
-      title: t("items.2.title"),
-      description: t("items.2.description"),
+      title: "Performance Optimization",
+      description:
+        "Streamline operations and improve efficiency across all business functions.",
     },
   ];
 
   return (
     <section
       id="services"
-      className="w-full py-12 md:py-24 lg:py-32 bg-muted/50"
+      className="w-full py-16 md:py-24 lg:py-32 overflow-hidden"
     >
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-              {t("title")}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
+          <div className="space-y-4 max-w-xl">
+            <div className="inline-flex items-center rounded-full border px-4 py-1.5 text-sm">
+              <span className="block h-2 w-2 rounded-full bg-primary"></span>
+              <span className="ml-2 font-medium">Our Services</span>
+            </div>
+            <h2 className="font-serif text-3xl font-medium tracking-tight sm:text-4xl">
+              Comprehensive solutions for your business needs
             </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              {t("subtitle")}
+            <p className="text-muted-foreground">
+              We offer a wide range of services designed to help your business
+              thrive in today's competitive landscape.
             </p>
           </div>
+          <Button variant="outline" className="group">
+            View All Services
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Button>
         </div>
-        <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {services.map((service, index) => (
-            <Card key={index} className="border-2 border-muted">
+            <Card
+              key={index}
+              className="border transition-all hover:shadow-md hover:border-primary/50"
+            >
               <CardHeader>
                 <div className="mb-2">{service.icon}</div>
-                <CardTitle>{service.title}</CardTitle>
+                <CardTitle className="font-serif">{service.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">
